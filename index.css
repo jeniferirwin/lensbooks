@@ -1,0 +1,54 @@
+body
+{ 
+    background-color: black;
+    color: white;
+    font-family: Courier New, Courier, monospace;
+}
+
+.tagfull
+{
+    margin-bottom: 1%;
+    margin-top: 1%;
+    border-style:groove;
+    border-color: #111111;
+    padding-bottom: 2%;
+    padding-top: 2%;
+}
+
+.tag
+{
+    margin-left: 2%;
+    font-size: larger;
+    color: cyan;
+}
+
+.tagdesc
+{
+    margin-left: 5%;
+}
+
+#construction
+{
+    font-size: x-large;
+    color: red;
+}
+
+a:link
+{
+    color: cyan;
+}
+
+a:visited
+{
+    color: gray;
+}
+
+a:hover
+{
+    color:aquamarine;
+}
+
+a:active
+{
+    color:white;
+}
