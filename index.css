@@ -86,3 +86,23 @@ h3
     color:darkcyan;
     font-weight:bold;
 }
+
+.command
+{
+    color:cyan;
+}
+
+.gold
+{
+    color:yellow;
+}
+
+.example-main-desc
+{
+    margin-left: 5%;
+    margin-right: 5%;
+    font-family: Consolas, monospace;
+    border-style:inset;
+    padding: 15px;
+    border-color:gray;
+}

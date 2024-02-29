@@ -26,8 +26,9 @@
         in the restring commands.
       </li>
       <li class="spaced">
-        <span class="keyword">MAX COLUMNS</span> is 78 by default. It is not recommended to change this, but it's
-        there if your book has unusual formatting requirements.
+        <span class="keyword">MAX COLUMNS</span> is 78 by default. 
+        Values higher than 78 will irritate the in-game
+        editor (and probably most readers).
       </li>
       <li class="spaced">
         <span class="keyword">MAX LINES</span> is 24 by default. Setting this to 120 will disable automatic page breaking.
@@ -37,48 +38,73 @@
         screen configuration without having to scroll.
       </li>
       <li class="spaced">
-        Your text will be automatically broken into pages that
-        conform to the columns and lines specified.
-      </li>
-      <li class="spaced">
         If you find 24 to be too cramped, 50 lines is probably
         reasonable for most computer screens.
       </li>
     </ul>
     <h2>ANATOMY OF A BOOK</h2>
     <h3>TABLE OF CONTENTS</h3>
+      <p>The table of contents will have the keyword of 'toc'. To help your reader
+      find it, you should indicate somewhere in the main description of your book that the reader
+      needs to type: <code class="command">read toc</code>
+    </p>
+    <p>Here is an example of what that might look like.</p>
+    <div class="example-main-desc">
+      <p>
+      This is a thick book bound in dark brown leather. The binding and pages are made of
+      smooth, high quality materials. The title is proudly
+      embossed in gold lettering on the front: <span class="gold">TRIUMPH ON THE COAST</span>
+      </p>
+      <p>
+        To read the table of contents, type: <span class="command">read toc</span>
+      </p>
+    </div>
     <p>
       The table of contents is usually a bit of a drag to make by hand, but it's also an incredibly
       important part of a book. Fortunately, the generator will create the table of contents
       for you automatically!
     </p>
-    <p>
-      You do need to help it do this, just a little bit. You do this by defining <span class="keyword">CHAPTERS</span>
-      in your book.
-    </p>
-    <h3>CHAPTERS</h3>
-    <p>
-      A CHAPTER of a book is a group of related pages. The Table of Contents will indicate
+      The Table of Contents will indicate
       how many pages are in a chapter, like this:
     </p>
     <pre>
     The Early Years ................... 01-09
     Before the War .................... 10-15
-    Conflict .......................... 15-21
+    Conflict .......................... 16-21
     Aftermath ......................... 22-25
     </pre>
     <p>
-      The beauty of the generator is that the pages will be automatically broken up,
-      identified and numbered for you. All you have to do is provide the chapter
-      names and provide any forced page breaks where desired.
-    </p>
+      You facilitate this by defining chapters
+      in your book, using markdown as indicated below.</p>
     <h3>PAGES</h3>
     <p>
-      Each page has the page number and chapter name up at the top. The bottom line
-      of a page shows the commands to get to adjacent pages. The body of the page shows
-      whatever text you've written.
+      <ul>
+        <li class="spaced">
+          The top line of a page is auto-generated. It shows the page number and the name of the chapter
+          the page is in.
+        </li>
+        <li class="spaced">
+          The bottom line
+      of a page is auto-generated. It shows the commands to get to adjacent pages. It also shows the
+      command to get back to the table of contents.
+        </li>
+        <li class="spaced">
+          The body of the page shows
+          whatever text you've written for it.
+        </li>
+      </ul>
     </p>
     <h2>MARKDOWN</h2>
+    <p>
+      There are really only two pieces of markdown you need to know to make a book.
+      These, along with any colors you want to use, will let you create clean, standardized
+      books using the generator.
+    </p>
+    <p>
+      Note that the use of LML is not supported with the generator. You CAN have LML in a book
+      that you made here, but you need to edit the generated commands to make sure all required
+      tags are in the right place.
+    </p>
     <ul>
     <li class="spaced">To start a new chapter, place three equals signs and then the chapter name:<br><code>=== The Early Years</code></li>
     <li class="spaced">To force a page break, place three asterisks on a line by themselves:<br><code>***</code></li>
@@ -86,7 +112,7 @@
     <li class="spaced">
       When making chapters and page breaks, the line MUST start with the equals signs or asterisks.
       If there is a space, color code or anything else before the symbols, it will be interpreted
-      as part of the book. There may be situations where you want to do this. Note that chapter names
+      as part of a page body. There may be situations where you want to do this. Note that chapter names
       can have color codes in them - just make sure the line starts with the three equals signs!
     </li>
     </ul>
@@ -113,8 +139,8 @@
         you're carrying are the restring tokens and the book you want to string.
       </li>
       <li class="spaced">
-        Testing has shown that the maximum number of lines in a buffer is 120. Trying to set
-        MAX LINES above this may have strange consequences.
+        Testing has shown that the maximum number of lines in the in-game editor is 120. Trying to set
+        MAX LINES above this may result in incomplete pages.
       </li>
     </ul>
   </div>
