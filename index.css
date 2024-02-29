@@ -52,3 +52,37 @@ a:active
 {
     color:white;
 }
+
+#warn
+{
+    color: red;
+}
+
+#docs
+{
+    width: 50%;
+    margin: auto;
+}
+
+.spaced
+{
+    margin-top:10px;
+}
+
+.keyword
+{
+    color:lime;
+    font-weight:bold;
+}
+
+h2
+{
+    color:cyan;
+    font-weight:bold;
+}
+
+h3
+{
+    color:darkcyan;
+    font-weight:bold;
+}

@@ -1,0 +1,122 @@
+<html>
+  <head>
+    <title>Lensmoor Book Generator Documentation</title>
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+  <div id="docs">
+    <p>
+      UNDER CONSTRUCTION  
+    </p>
+    <h2>BASICS</h2>
+    <p>
+      To use the generator, start putting text in the left box. In the
+      right box, you'll see a WYSIWYG version of your future book.
+    </p>
+    <p>
+      In the box at the very bottom, you'll find all the commands required to
+      create the book in-game. You can copy these and then paste them into the
+      MUD to string up your entire book at once! Please read the Caveats section
+      below before doing this, however.
+    </p>
+    <h2>CONFIGURATION</h2>
+    <ul>
+      <li class="spaced">
+        <span class="keyword">KEYWORD</span> is 'book' by default. This is the keyword that will be used
+        in the restring commands.
+      </li>
+      <li class="spaced">
+        <span class="keyword">MAX COLUMNS</span> is 78 by default. It is not recommended to change this, but it's
+        there if your book has unusual formatting requirements.
+      </li>
+      <li class="spaced">
+        <span class="keyword">MAX LINES</span> is 24 by default. Setting this to 120 will disable automatic page breaking.
+      </li>
+      <li class="spaced">
+        The 78x24 defaults ensure that your book's pages will fit in almost any
+        screen configuration without having to scroll.
+      </li>
+      <li class="spaced">
+        Your text will be automatically broken into pages that
+        conform to the columns and lines specified.
+      </li>
+      <li class="spaced">
+        If you find 24 to be too cramped, 50 lines is probably
+        reasonable for most computer screens.
+      </li>
+    </ul>
+    <h2>ANATOMY OF A BOOK</h2>
+    <h3>TABLE OF CONTENTS</h3>
+    <p>
+      The table of contents is usually a bit of a drag to make by hand, but it's also an incredibly
+      important part of a book. Fortunately, the generator will create the table of contents
+      for you automatically!
+    </p>
+    <p>
+      You do need to help it do this, just a little bit. You do this by defining <span class="keyword">CHAPTERS</span>
+      in your book.
+    </p>
+    <h3>CHAPTERS</h3>
+    <p>
+      A CHAPTER of a book is a group of related pages. The Table of Contents will indicate
+      how many pages are in a chapter, like this:
+    </p>
+    <pre>
+    The Early Years ................... 01-09
+    Before the War .................... 10-15
+    Conflict .......................... 15-21
+    Aftermath ......................... 22-25
+    </pre>
+    <p>
+      The beauty of the generator is that the pages will be automatically broken up,
+      identified and numbered for you. All you have to do is provide the chapter
+      names and provide any forced page breaks where desired.
+    </p>
+    <h3>PAGES</h3>
+    <p>
+      Each page has the page number and chapter name up at the top. The bottom line
+      of a page shows the commands to get to adjacent pages. The body of the page shows
+      whatever text you've written.
+    </p>
+    <h2>MARKDOWN</h2>
+    <ul>
+    <li class="spaced">To start a new chapter, place three equals signs and then the chapter name:<br><code>=== The Early Years</code></li>
+    <li class="spaced">To force a page break, place three asterisks on a line by themselves:<br><code>***</code></li>
+    <li class="spaced">To create a blank line, use <code>{x</code>, or some other color code:<br><code>{x</code></li>
+    <li class="spaced">
+      When making chapters and page breaks, the line MUST start with the equals signs or asterisks.
+      If there is a space, color code or anything else before the symbols, it will be interpreted
+      as part of the book. There may be situations where you want to do this. Note that chapter names
+      can have color codes in them - just make sure the line starts with the three equals signs!
+    </li>
+    </ul>
+    <h2>CAVEATS</h2>
+    <ul>
+      <li class="spaced">
+        You need to make sure that you DON'T paste all the commands into
+        the MUD at once, or you WILL be disconnected!
+      </li>
+      <li class="spaced">
+        Some MUD clients have a feature that
+        allows you to load in a text file as a series of commands, with a short delay between each line.
+        I recommend learning how to use this feature if your client has it. Otherwise, you'll
+        have to carefully paste in only about 6-10 lines at a time. 
+      </li>
+      <li class="spaced">
+        Double and triple-check to make sure the keyword is correct! It's best if you have
+        already done the basic keyword/short/long restringing or detailing on your book.
+        You could put a super unique keyword in there, like 'mattsbookofmachines', to be
+        certain that you won't be accidentally stringing something else in your inventory.
+      </li>
+      <li class="spaced">
+        Another strategy to avoid messing up items is to just make sure that the only things
+        you're carrying are the restring tokens and the book you want to string.
+      </li>
+      <li class="spaced">
+        Testing has shown that the maximum number of lines in a buffer is 120. Trying to set
+        MAX LINES above this may have strange consequences.
+      </li>
+    </ul>
+  </div>
+  </body>
+</html>
