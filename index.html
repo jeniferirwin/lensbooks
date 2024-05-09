@@ -1,7 +1,9 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <title>Lensmoor Book Generator</title>
     <link rel="stylesheet" href="index.css">
+    <script src="index.js"></script>
   </head>
   <body>
     <div id="intro">
@@ -22,6 +24,15 @@
         functions and caveats you need to know about.
       </p>
     </div>
-  <script src="index.js"/>
+  <div id="upper">
+    <div id="div-bookinput">
+        <textarea id="bookinput" name="bookinput" oninput="OnInputChange()"></textarea>
+    </div>
+    <div id="wysiwyg">
+    </div>
+  </div>
+  <div id="div-bookoutput">
+    <textarea id="bookoutput" name="bookoutput"></textarea>
+  </div>
   </body>
 </html>
