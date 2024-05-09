@@ -44,9 +44,9 @@
     </ul>
     <h2>ANATOMY OF A BOOK</h2>
     <h3>TABLE OF CONTENTS</h3>
-      <p>The table of contents will have the keyword of 'toc'. To help your reader
+      <p>The table of contents will have the keyword of 'contents'. To help your reader
       find it, you should indicate somewhere in the main description of your book that the reader
-      needs to type: <code class="command">read toc</code>
+      needs to type: <code class="command">read contents</code>
     </p>
     <p>Here is an example of what that might look like.</p>
     <div class="example-main-desc">
@@ -56,7 +56,7 @@
       embossed in gold lettering on the front: <span class="gold">TRIUMPH ON THE COAST</span>
       </p>
       <p>
-        To read the table of contents, type: <span class="command">read toc</span>
+        To read the table of contents, type: <span class="command">read contents</span>
       </p>
     </div>
     <p>
@@ -119,6 +119,12 @@
     <h2>CAVEATS</h2>
     <ul>
       <li class="spaced">
+        <span id="warn">No data gets saved on this site!</span> Keep your book in a text file and copy-paste it into the
+        box. A quick way to clear the box is to put your cursor in it, press CTRL+A (select all) and then backspace. Then
+        you can paste updated text in. Make sure you don't accidentally paste your book more than
+        once, or you might waste restring tokens!
+      </li>
+      <li class="spaced">
         You need to make sure that you DON'T paste all the commands into
         the MUD at once, or you WILL be disconnected!
       </li>
@@ -142,7 +148,24 @@
         Testing has shown that the maximum number of lines in the in-game editor is 120. Trying to set
         MAX LINES above this may result in incomplete pages.
       </li>
+      <li class="spaced">
+        The generator does very little sanity checking. Given the varied design and content that people
+        might write for books, there really isn't much sanity checking I could do anyway. That's why the
+        WYSIWYG part of the editor exists!
+      </li>
+      <li class="spaced">This is not intended as a foolproof way for
+        anyone to just hemmorhage random text and get a complete book back - the user is expected to study
+        examples and practice a bit to get the hang of it. Remember, any character with 20 or more RP gets
+        free restrings. Those are ideal characters to practice and test with!
+      </li>
+      <li class="spaced">Please CAREFULLY REVIEW the list of commands before pasting them into
+        the MUD. I will not be held responsible for any objects that are botched as a result of using
+        this generator!
+      </li>
     </ul>
+  <p>
+    That was a lot! Back to the <a href="index.html">generator</a>.
+  </p>
   </div>
   </body>
 </html>
