@@ -1,8 +1,12 @@
-body
+body, html
 { 
     background-color: black;
     color: white;
     font-family: Courier New, Courier, monospace;
+    height: 100%;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 
 .tagfull
@@ -105,4 +109,80 @@ h3
     border-style:inset;
     padding: 15px;
     border-color:gray;
+}
+
+#upper
+{
+    margin-left: 5%;
+    width: 90%;
+    height: 50%;
+    display: flex;
+    box-sizing: inherit;
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+
+#wysiwyg
+{
+    overflow-y:auto;
+    border-style:groove;
+    flex: 50%;
+    margin-left: 5%;
+    height: 100%;
+    box-sizing: inherit;
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+
+#div-bookinput
+{
+    background-color: gray;
+    border-style:groove;
+    flex: 50%;
+    height: 100%;
+    box-sizing: inherit;
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+
+#bookinput
+{
+    background-color: #222222;
+    color: #ffffff;
+    width: 100%;
+    height: 100%;
+    box-sizing: inherit;
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+
+#div-bookoutput
+{
+    margin-left: 5%;
+    margin-top: 5%;
+    width: 90%;
+    height: 100%;
+    border-style:groove;
+    clear:both;
+    background-color: black;
+    box-sizing: inherit;
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+
+#bookoutput
+{
+    width: 100%;
+    height: 100%;
+    background-color: darkslategrey;
+    color: white;
+    box-sizing: inherit;
+    -webkit-box-sizing: inherit;
+    -moz-box-sizing: inherit;
+}
+
+#intro
+{
+    width: 90%;
+    margin-left: 5%;
 }
