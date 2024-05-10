@@ -3,18 +3,10 @@ let wysiwyg = "wysiwyg";
 let output = "bookoutput";
 
 function OnInputChange() {
-    var newtext = document.getElementById(input).value;
-    var lines = newtext.replace(/\r\n/g,"\n").split("\n");
-    var wrapped = [];
-    document.getElementById(wysiwyg).innerHTML = "";
-    document.getElementById(output).value = "";
-    for (let i = 0; i < lines.length; i++) {
-        wrapped[i] = WordWrap(lines[i]);
-    }
-    for (let i = 0; i < wrapped.length; i++) {
-        document.getElementById(wysiwyg).innerHTML += wrapped[i];
-        document.getElementById(output).value += wrapped[i];
-    }
+    var text = document.getElementById(input).value;
+    var wrapped = WordWrap(text);
+    document.getElementById(wysiwyg).innerHTML = wrapped.replace("\n\r", "<br>");
+    document.getElementById(output).value = wrapped;
 }
 
 function ColorLength(string) {
@@ -34,48 +26,59 @@ function ColorLength(string) {
     return count;
 }
 
-function WordWrap(line) {
-    let newlines = [];
-    newlines[0] = "{x";
-    let index = 0;
-    let word = "";
-    let wordDone = false;
-    for (let char = 0; char < line.length; char++) {
+function WordWrap(text) {
+    var wrapped = "{x";
+    var skip = false;
+    var count = 0;
+    var next = 0;
 
-        if (char == line.length) {
-            if (word.length > 0) {
-                newlines[index] = newlines[index] + word + "\n";
-            } else {
-                newlines[index] = newlines[index] + "\n";
-            }
-            break;
-        }
+    for (let i = 0; i < text.length; i++) {
 
-        if ((line[char] == " " || line[char] == "\n") && !wordDone) {
-            wordDone = true;
-        }
-
-        if (line[char] != " " && line[char] != "\n") {
-            word += line[char];
-            continue;
-        }
-
-        if (wordDone && ColorLength(newlines[index]) + ColorLength(word) >= 78) {
-            newlines[index] = newlines[index] + "\n";
-            index++;
-            newlines[index] = "{x";
-            newlines[index] += word;
-            word = "";
-            wordDone = false;
+        if (text[i] == "\n") {
+            wrapped += "\n{x";
+            count = 0;
             continue;
         }
         
-        if (wordDone && ColorLength(newlines[index]) + ColorLength(word) < 78) {
-            newlines[index] = newlines[index] + word + " ";
-            word = "";
-            wordDone = false;
+        if (skip) {
+            wrapped += text[i];
+            skip = false;
+            continue;
+        }
+
+        if (text[i] == "{") { 
+            wrapped += text[i];
+            skip = true;
+            continue;
+        }
+
+        next = NextSpace(i, text);
+
+        if (count + (next - i) >= 78) {
+            wrapped += "\n{x";
+            wrapped += text[i];
+            count = 0;
+            continue;
         }
         
+        wrapped += text[i];
+        count++;
     }
-    return newlines;
+    return wrapped;
+}
+
+function NextSpace(pos, string) {
+    for (let i = pos; i < string.length; i++) {
+        if (string[i] == " ") {
+            return i;
+        }
+    }
+    return string.length; 
+}
+
+function WYSIWYGColorize(string) {
+    string = string.replace("{x", "</span><span class='clear'>");
+    string = string.replace("{r", "</span><span class='red'>");
+    string = string.replace("{R", "</span><span class='bred'>");
+    return string;
 }
