@@ -4,16 +4,29 @@ let output = "bookoutput";
 
 function OnInputChange() {
     var text = document.getElementById(input).value;
+    document.getElementById(wysiwyg).innerHTML = "";
+    document.getElementById(output).value = "";
     var chapters = GetChapters(text);
-    var wrapped = WordWrap(text);
-    document.getElementById(wysiwyg).innerHTML = WYSIWYGColorize(wrapped.replace("\n", "<br>"));
-    document.getElementById(output).value = wrapped;
+    console.log(chapters);
+    if (chapters == 0 || chapters.length % 2 != 0) {
+        document.getElementById(wysiwyg).innerHTML = "Please enter at least one chapter and some text for it.";
+        document.getElementById(output).value = "Please enter at least one chapter and some text for it.";
+        return;
+    }
+    //document.getElementById(wysiwyg).innerHTML = WYSIWYGColorize(wrapped.replace("\n", "<br>"));
+    //document.getElementById(output).value = wrapped;
     //document.getElementById(output).value = wrapped;
 }
 
 function GetChapters(text) {
+    chunks = text.split(new RegExp("=== (.+)\n"), -1);
+    chunks.splice(0, 1);
     chapters = [];
-    chapter = text.split(new RegExp("=== (.+)\n"), -1);
+    for (let i = 0; i < chunks.length; i++) {
+        if (i % 2 == 0) {
+            chapters.push(new Chapter(chunks[i], chunks[i + 1]));
+        }
+    }
     return chapters;
 }
 
@@ -87,4 +100,19 @@ function WYSIWYGColorize(string) {
     string = string.replace(new RegExp("{C", "g"), "<span class='bcyan'>");
     string = string.replace(new RegExp("{W", "g"), "<span class='bwhite'>");
     return string;
+}
+
+class Page {
+
+    constructor() {
+        this.text = "";
+    }
+}
+
+class Chapter {
+
+    constructor(title, text) {
+        this.title = title;
+        this.text = text;
+    }
 }
