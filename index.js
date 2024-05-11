@@ -5,6 +5,7 @@ class Input {
         this.author = document.getElementById("authorinput").value;
         this.tagline = document.getElementById("taglineinput").value;
         this.color = document.getElementById("colorinput").value;
+        this.uicolor = document.getElementById("uicolorinput").value;
         this.columns = document.getElementById("columnsinput").value;
         this.rows = document.getElementById("rowsinput").value;
         this.keyword = document.getElementById("keywordinput").value;
@@ -47,6 +48,7 @@ class Output {
 function OnInputChange() {
     var input = new Input();
     var output = new Output();
+    console.log(input);
     output.wysiwyg.innerHTML = "";
     output.cmds.value = "";
     var chapters = GetChapters(input.text);
@@ -80,11 +82,11 @@ function OnInputChange() {
 function SanityCheck(input, chapters) {
     errString = "";
     var sane = true;
-    if (input.title != "") {
+    if (input.title == "") {
         errString += "Please include a title.\n";
         sane = false;
     }
-    if (input.author != "") {
+    if (input.author == "") {
         errString += "Please include an author.\n";
         sane = false;
     }
@@ -292,7 +294,7 @@ function CreateTableOfContents(chapters, input) {
     
 
     for (let i = 0; i < chapters.length; i++) {
-        tocString += OneChapterLine(chapters[i], i);
+        tocString += OneChapterLine(chapters[i], i, input);
     }
 
 
@@ -304,7 +306,7 @@ function CreateTableOfContents(chapters, input) {
     return tocString;
 }
 
-function OneChapterLine(chapter, i) {
+function OneChapterLine(chapter, i, input) {
     var chapterLine = input.color + chapter.title;
     for (let j = 0; j <= input.columns - chapterLine.length; j++) {
         chapterLine += ".";
