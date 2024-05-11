@@ -1,14 +1,24 @@
+* { 
+    -moz-box-sizing: border-box; 
+    -webkit-box-sizing: border-box; 
+     box-sizing: border-box; 
+}
+
 body, html
 { 
     background-color: black;
     color: white;
     font-family: Courier New, Courier, monospace;
-    height: 100%;
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
 }
 
+input {
+    background-color: #222222;
+    color: white;
+}
+td {
+    padding: 5px;
+    padding-right: 40px;
+}
 .tagfull
 {
     margin-bottom: 1%;
@@ -111,39 +121,21 @@ h3
     border-color:gray;
 }
 
-#upper
-{
-    margin-left: 5%;
-    width: 90%;
-    height: 50%;
-    display: flex;
-    box-sizing: inherit;
-    -webkit-box-sizing: inherit;
-    -moz-box-sizing: inherit;
-}
-
 #wysiwyg
 {
+    background-color: black;
+    color: white;
     overflow-y: scroll;
-    border-style:groove;
-    border-color: gray;
-    padding: calc(1ch * 1);
-    width: calc(1ch * 82);
-    margin-left: 5%;
-    height: 100%;
-    box-sizing: inherit;
-    -webkit-box-sizing: inherit;
-    -moz-box-sizing: inherit;
+    padding: 10px;
 }
 
-#div-bookinput
+.textbox
 {
-    background-color: gray;
-    border-style:groove;
-    height: 100%;
-    box-sizing: inherit;
-    -webkit-box-sizing: inherit;
-    -moz-box-sizing: inherit;
+    width: 80%;
+    height: 500px;
+    border-style: inset;
+    border-color: gray;
+    margin: auto;
 }
 
 #bookinput
@@ -151,51 +143,32 @@ h3
     background-color: #222222;
     color: #ffffff;
     font-family: monospace;
-    width: calc(1ch * 81);
+    width: 100%;
     height: 100%;
-    resize: none;
     overflow-y: scroll;
-    box-sizing: inherit;
-    -webkit-box-sizing: inherit;
-    -moz-box-sizing: inherit;
-}
-
-#div-bookoutput
-{
-    margin-left: 5%;
-    margin-top: 5%;
-    width: 90%;
-    height: 100%;
-    border-style:groove;
-    clear:both;
-    background-color: black;
-    box-sizing: inherit;
-    -webkit-box-sizing: inherit;
-    -moz-box-sizing: inherit;
+    padding: 10px;
 }
 
 #details
 {
-    margin-left: 5%;
-    width: 90%;
-    clear: both;
+    width: 80%;
+    margin: 0 auto;
 }
 
 #bookoutput
 {
     width: 100%;
-    height: 100%;
     background-color: darkslategrey;
     color: white;
-    box-sizing: inherit;
-    -webkit-box-sizing: inherit;
-    -moz-box-sizing: inherit;
+    height: 100%;
+    overflow-y: scroll;
+    padding: 10px;
 }
 
 #intro
 {
-    width: 90%;
-    margin-left: 5%;
+    width: 80%;
+    margin: 0 auto;
 }
 
 .red { color: red; font-weight: normal; }
