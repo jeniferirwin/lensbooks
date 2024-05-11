@@ -10,7 +10,7 @@
     </p>
     <h2>BASICS</h2>
     <p>
-      To use the generator, start putting text in the left box. In the
+      To use the generator, fill out the configuration fields and then start putting text in the left box. In the
       right box, you'll see a WYSIWYG version of your future book.
     </p>
     <p>
@@ -26,12 +26,31 @@
         in the restring commands.
       </li>
       <li class="spaced">
-        <span class="keyword">MAX COLUMNS</span> is 78 by default. 
-        Values higher than 78 will irritate the in-game
-        editor (and probably most readers).
+        <span class="keyword">TITLE</span> is 'Title' by default. This is the title of your book, and
+        will be displayed on the table of contents.
       </li>
       <li class="spaced">
-        <span class="keyword">MAX LINES</span> is 24 by default. Setting this to 120 will disable automatic page breaking.
+        <span class="keyword">AUTHOR</span> is 'Author' by default. This is the author of your book, and
+        will be displayed on the table of contents.
+      </li>
+      <li class="spaced">
+        <span class="keyword">TAGLINE</span> is blank by default. This is an optional little blurb that
+        will be displayed below the title and author name on the table of contents.
+      </li>
+      <li class="spaced">
+        <span class="keyword">DEFAULT COLOR</span> is {x by default. This is the color code that will
+          be used as the default color for all of the text in your book. The generator places this color
+          code at the beginning of every line. While you can use whatever Lensmoor color code you like,
+          keep in mind that it can be unpleasant to read large blocks of bright, garish text. {x, {g, and {c are
+          commonly used, safe choices.
+      </li>
+      <li class="spaced">
+        <span class="keyword">MAX COLUMNS</span> is 78 by default. 
+        Values higher than 78 will irritate the in-game
+        editor (and probably most readers). It won't go lower than 5 or higher than 502.
+      </li>
+      <li class="spaced">
+        <span class="keyword">MAX ROWS</span> is 24 by default. It won't go lower than 5 or higher than 120.
       </li>
       <li class="spaced">
         The 78x24 defaults ensure that your book's pages will fit in almost any
@@ -111,7 +130,7 @@
     <li class="spaced">
       When making chapters and page breaks, the line MUST start with the equals signs or asterisks.
       If there is a space, color code or anything else before the symbols, it will be interpreted
-      as part of a page body. There may be situations where you want to do this. Note that chapter names
+      as part of a page body. There may be situations where this is desired. Note that chapter names
       can have color codes in them - just make sure the line starts with the three equals signs!
     </li>
     </ul>
@@ -148,9 +167,9 @@
         MAX LINES above this may result in incomplete pages.
       </li>
       <li class="spaced">
-        The generator does very little sanity checking. Given the varied design and content that people
-        might write for books, there really isn't much sanity checking I could do anyway. That's why the
-        WYSIWYG part of the editor exists!
+        This generator does do a bit of very basic sanity checking, but it's not strenuous. You're free
+        to make books with weird dimensions, but try to keep your audience in mind. Not all screen sizes
+        are alike. The default is 78x24 for a reason!
       </li>
       <li class="spaced">This is not intended as a foolproof way for
         anyone to just hemmorhage random text and get a complete book back - the user is expected to study
@@ -166,5 +185,6 @@
     That was a lot! Back to the <a href="index.html">generator</a>.
   </p>
   </div>
+  <br>
   </body>
 </html>
