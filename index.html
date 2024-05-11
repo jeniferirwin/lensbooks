@@ -26,10 +26,35 @@
     </div>
   <hr width="90%" align="center">
   <div id="details">
-    <p>Title: <input id="titleinput" name="titleinput" placeholder="Title" oninput="OnInputChange()"></input></p>
-    <p>Author: <input id="authorinput" name="authorinput" placeholder="Author" oninput="OnInputChange()"></input></p>
-    <p>Tagline (optional): <input id="taglineinput" name="taglineinput" placeholder="" oninput="OnInputChange()"></input></p>
+    <table>
+      <tr>
+        <td>Restring Keyword</td>
+        <td><input id="keywordinput" name="keywordinput" placeholder="book" oninput="OnInputChange()"></input></td>
+      </tr>
+      <tr>
+        <td>Title</td>
+        <td><input id="titleinput" name="titleinput" placeholder="Title" oninput="OnInputChange()"></input></td>
+      </tr>
+      <tr>
+        <td>Author</td>
+        <td><input id="authorinput" name="authorinput" placeholder="Author" oninput="OnInputChange()"></input></td>
+      </tr>
+      <tr>
+        <td>Tagline (optional)</td>
+        <td><input id="taglineinput" name="taglineinput" placeholder="" oninput="OnInputChange()"></input></td>
+      </tr>
+      <tr>
+        <td>Default Color</td>
+        <td><input id="colorinput" name="colorinput" placeholder="{x" oninput="OnInputChange()"></input></td>
+      </tr>
+      <tr>
+        <td>Max Columns</td>
+        <td><input id="columnsinput" name="columnsinput" placeholder="78" oninput="OnInputChange()"></input></td>
+      </tr>
+    </table>
   </div>
+  <hr width="90%" align="center">
+  <br>
   <div id="upper">
     <div id="div-bookinput">
 <textarea id="bookinput" name="bookinput" oninput="OnInputChange()">
