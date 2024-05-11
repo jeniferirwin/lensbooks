@@ -9,6 +9,9 @@ let output = "bookoutput";
  */
 function OnInputChange() {
     var text = document.getElementById(input).value;
+    var title = document.getElementById("titleinput").value;
+    var author = document.getElementById("authorinput").value;
+    var tagline = document.getElementById("taglineinput").value;
     document.getElementById(wysiwyg).innerHTML = "";
     document.getElementById(output).value = "";
     var chapters = GetChapters(text);
@@ -20,25 +23,43 @@ function OnInputChange() {
     chapters = AssignPageNumbers(chapters);    
 
     console.log(chapters);
-    var toc = CreateTableOfContents(chapters);
-    if (chapters == null || chapters.length < 1) {
-        document.getElementById(wysiwyg).innerHTML = "Please enter at least one chapter and some text for it.";
-        document.getElementById(output).value = "Please enter at least one chapter and some text for it.";
+    var string = CreateTableOfContents(chapters);
+
+    if (!SanityCheck(title, author, chapters)) {
+        document.getElementById(wysiwyg).innerHTML = WYSIWYGColorize(errString);
+        document.getElementById(output).value = errString;
         return;
-    } else {
-        string += toc;
-        for (let i = 0; i < chapters.length; i++) {
-            for (let j = 0; j < chapters[i].pages.length; j++) {
-                string += chapters[i].title + ": " + chapters[i].pages[j].number + "\n";
-                string += chapters[i].pages[j].text;
-            }
-        }
-        document.getElementById(wysiwyg).innerHTML = WYSIWYGColorize(string);
-        document.getElementById(output).value = WYSIWYGColorize(string);
     }
-    //document.getElementById(wysiwyg).innerHTML = WYSIWYGColorize(wrapped.replace("\n", "<br>"));
-    //document.getElementById(output).value = wrapped;
-    //document.getElementById(output).value = wrapped;
+
+    for (let i = 0; i < chapters.length; i++) {
+        for (let j = 0; j < chapters[i].pages.length; j++) {
+            string += chapters[i].title + ": " + chapters[i].pages[j].number + "\n";
+            string += chapters[i].pages[j].text;
+        }
+    }
+
+    document.getElementById(wysiwyg).innerHTML = WYSIWYGColorize(string.replace(/ /g, "&nbsp"));
+    document.getElementById(output).value = WYSIWYGColorize(string.replace(/ /g, "&nbsp"));
+}
+
+function SanityCheck(title, author, chapters) {
+    errString = "";
+    var sane = true;
+    if (title != "") {
+        errString += "Please include a title.\n";
+        sane = false;
+    }
+    if (author != "") {
+        errString += "Please include an author.\n";
+        sane = false;
+    }
+
+    if (chapters == null || chapters.length < 1) {
+        errString += "Please include at least one chapter and some text for it.";
+        sane = false;
+    }
+
+    return sane;
 }
 
 /**
@@ -234,11 +255,11 @@ class Chapter {
  * @return {string} The generated table of contents.
  */
 function CreateTableOfContents(chapters) {
-    string = "{x";
-    for (let i = 0; i <= 78; i++) {
-        string += "=";
+    tocString = "{x";
+    for (let i = 0; i < 77; i++) {
+        tocString += "=";
     }
-    string += "\n";
+    tocString += "\n";
     
 
     for (let i = 0; i < chapters.length; i++) {
@@ -247,23 +268,31 @@ function CreateTableOfContents(chapters) {
             chapterLine += ".";
         }
         chapterLine += " ";
-        if (chapters[i].pages[0].number < 10) {
-            chapterLine += "0" + chapters[i].pages[0].number;
-        } else {
-            chapterLine += chapters[i].pages[0].number;
+        var first = chapters[i].pages[0].number;
+        var last = chapters[i].pages[chapters[i].pages.length - 1].number;
+
+        if (first < 10) { 
+            chapterLine += "0";
         }
+        chapterLine += first;
+
         if (chapters[i].pages.length > 1) {
-            chapterLine += " - " + chapters[i].pages[chapters[i].pages.length - 1].number;
+            chapterLine += " - ";
+            if (last < 10) {
+                chapterLine += "0";
+            }
+            chapterLine += last;
         }
         
-        string += chapterLine;
+        tocString += chapterLine;
+        tocString += "\n";
     }
 
 
-    string += "{x";
-    for (let i = 0; i <= 78; i++) {
-        string += "=";
+    tocString += "{x";
+    for (let i = 0; i < 77; i++) {
+        tocString += "=";
     }
-    string += "\n";
-    return string;
+    tocString += "\n";
+    return tocString;
 }
