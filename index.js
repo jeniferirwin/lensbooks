@@ -40,11 +40,6 @@ class Output {
     }
 }
 
-/**
- * Handles the input change event and updates the WYSIWYG editor and output textarea based on the input text.
- *
- * @return {void} This function does not return a value.
- */
 function OnInputChange() {
     var input = new Input();
     var output = new Output();
@@ -62,6 +57,7 @@ function OnInputChange() {
     console.log(chapters);
     var string = CreateTableOfContents(chapters, input);
 
+    console.log(string);
     if (!SanityCheck(input, chapters)) {
         output.wysiwyg.innerHTML = errString;
         output.cmds.value = errString;
@@ -238,7 +234,7 @@ function WYSIWYGColorize(string) {
  */
 function SplitIntoPages(chapter) {
     var pages = [];
-    pages.push(new Page());
+    pages.push(new Page(chapter));
     var count = 0;
     var string = "";
     for (let i = 0; i < chapter.text.length; i++) {
@@ -257,7 +253,7 @@ function SplitIntoPages(chapter) {
         }
 
         if (count > 5) {
-            pages.push(new Page());
+            pages.push(new Page(chapter));
             count = 0;
         }
 
@@ -270,9 +266,10 @@ function SplitIntoPages(chapter) {
 
 class Page {
 
-    constructor(text) {
+    constructor(chapter) {
         this.text = "";
         this.number = -1;
+        this.chapter = chapter;
     }
 }
 
@@ -286,28 +283,16 @@ class Chapter {
 }
 
 function CreateTableOfContents(chapters, input) {
-    tocString = "{x+";
-    for (let i = 0; i < input.columns; i++) {
-        tocString += "=";
-    }
-    tocString += "+\n";
-    
-
+    var tocString = CreateBar(input);    
     for (let i = 0; i < chapters.length; i++) {
         tocString += OneChapterLine(chapters[i], i, input);
     }
-
-
-    tocString += "{x";
-    for (let i = 0; i < input.columns; i++) {
-        tocString += "=";
-    }
-    tocString += "\n";
+    tocString += CreateBar(input);
     return tocString;
 }
 
 function OneChapterLine(chapter, i, input) {
-    var chapterLine = input.color + chapter.title;
+    var chapterLine = input.color + chapter.title + " ";
     for (let j = 0; j <= input.columns - chapterLine.length; j++) {
         chapterLine += ".";
     }
@@ -327,7 +312,87 @@ function OneChapterLine(chapter, i, input) {
         }
         chapterLine += last;
     }
+    chapterLine += "\n";
     
-    tocString += chapterLine;
-    tocString += "\n";
+    return chapterLine;
+}
+
+function GeneratePageHeader(page, input) {
+    let pageHeaderLeft = page.chapter.title + " ";
+    let pageHeaderRight = "";
+    let pageHeaderSpace = "";
+
+    if (page.number < 10) {
+        pageHeaderRight += " 0";
+    } else {
+        pageHeaderRight += " ";
+    }
+    
+    pageHeaderRight += page.number;
+
+    for (let i = 0; i < input.columns - (pageHeaderLeft.length + pageHeaderRight.length); i++) {
+        pageHeaderSpace += " ";
+    }
+    
+    return pageHeaderLeft + pageHeaderSpace + pageHeaderRight;
+}
+
+function GeneratePageFooter(page, input) {
+    let pageFooterLeft = "";
+    let pageFooterRight = "";
+    let pageFooterCenter = "";
+
+    if (page.number == 1) {
+        pageFooterLeft += "read contents";
+    }
+    
+    if (page.number > 1) {
+        if (page.number < 9) {
+            pageFooterLeft += "[read 0" + (page.number - 1) + "]";
+        } else {
+            pageFooterLeft += "[read " + (page.number - 1) + "]";
+        }
+    } else {
+        pageFooterLeft += "[read contents]";
+    }
+
+    if (page.number + 1 <= TotalPages(page.chapter)) {
+        if (page.number < 9) {
+            pageFooterRight += "[read 0" + page.number + 1 + "]";
+        } else {
+            pageFooterRight += "[read " + page.number + 1 + "]";
+        }
+    } else {
+        pageFooterRight += "";
+    }
+    
+    if (page.number > 1) {
+        pageFooterCenter = "[read contents]";
+    }
+    
+    var remaining = input.columns - (pageFooterLeft.length + pageFooterRight.length + pageFooterCenter.length);
+    var flipper = true;
+    for (let i = 0; i < remaining; i++) {
+        if (flipper) {
+            pageFooterCenter += " ";
+        } {
+            pageFooterCenter = " " + pageFooterCenter;
+        }
+        flipper = !flipper;
+    }
+    return input.uicolor + pageFooterLeft + pageFooterCenter + pageFooterRight;
+}
+
+function TotalPages(chapters) {
+    return chapters[chapters.length - 1].pages.length - 1;
+}
+
+function CreateBar(input) {
+    var bar = "+";
+    for (let i = 0; i < (input.columns - 2); i++) {
+        bar += "=";
+    }
+    bar += "+\n";
+    bar = input.uicolor + bar;
+    return bar;
 }
