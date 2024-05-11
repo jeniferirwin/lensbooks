@@ -158,13 +158,18 @@ function SplitIntoPages(chapter) {
             count++;
         }
 
-        pages[pages.length - 1].text += chapter.text[i];
+        if (chapter.text[i] != '') {
+            pages[pages.length - 1].text += chapter.text[i];
+        }
 
         if (count > 5) {
             pages.push(new Page());
             count = 0;
         }
 
+    }
+    if (pages[pages.length - 1].text == "") {
+        pages.pop();
     }
     return pages;
 }
