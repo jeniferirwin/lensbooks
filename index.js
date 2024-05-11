@@ -6,8 +6,29 @@ class Input {
         this.tagline = document.getElementById("taglineinput").value;
         this.color = document.getElementById("colorinput").value;
         this.columns = document.getElementById("columnsinput").value;
+        this.rows = document.getElementById("rowsinput").value;
         this.keyword = document.getElementById("keywordinput").value;
         this.text = document.getElementById("bookinput").value;
+        
+        if (this.color.length > 2) {
+            this.color = this.color.substring(0,1);
+        }
+
+        if (this.columns < 5) {
+            this.columns = 5;
+        }
+
+        if (this.columns > 502) {
+            this.columns = 502;
+        }
+
+        if (this.rows < 5) {
+            this.rows = 5;
+        }
+        
+        if (this.rows > 120) {
+            this.rows = 120;
+        }
     }
 }
 
@@ -28,8 +49,6 @@ function OnInputChange() {
     var output = new Output();
     output.wysiwyg.innerHTML = "";
     output.cmds.value = "";
-    //document.getElementById(wysiwyg).innerHTML = "";
-    //document.getElementById(output).value = "";
     var chapters = GetChapters(input.text);
 
     for (let i = 0; i < chapters.length; i++) {
@@ -42,8 +61,8 @@ function OnInputChange() {
     var string = CreateTableOfContents(chapters, input);
 
     if (!SanityCheck(input, chapters)) {
-        document.getElementById(wysiwyg).innerHTML = WYSIWYGColorize(errString);
-        document.getElementById(output).value = errString;
+        output.wysiwyg.innerHTML = errString;
+        output.cmds.value = errString;
         return;
     }
 
@@ -55,7 +74,7 @@ function OnInputChange() {
     }
 
     output.wysiwyg.innerHTML = WYSIWYGColorize(string.replace(/ /g, "&nbsp"));
-    output.cmds.value = WYSIWYGColorize(string.replace(/ /g, "&nbsp"));
+    output.cmds.value = WYSIWYGColorize(string);
 }
 
 function SanityCheck(input, chapters) {
@@ -120,7 +139,7 @@ function GetChapters(text) {
  * @param {string} text - The text to be wrapped
  * @return {string} The wrapped text
  */
-function WordWrap(text) {
+function WordWrap(text, input) {
     var wrapped = "{x";
     var skip = false;
     var count = 0;
@@ -266,7 +285,7 @@ class Chapter {
 
 function CreateTableOfContents(chapters, input) {
     tocString = "{x+";
-    for (let i = 0; i < 75; i++) {
+    for (let i = 0; i < input.columns; i++) {
         tocString += "=";
     }
     tocString += "+\n";
@@ -278,7 +297,7 @@ function CreateTableOfContents(chapters, input) {
 
 
     tocString += "{x";
-    for (let i = 0; i < 77; i++) {
+    for (let i = 0; i < input.columns; i++) {
         tocString += "=";
     }
     tocString += "\n";
@@ -286,8 +305,8 @@ function CreateTableOfContents(chapters, input) {
 }
 
 function OneChapterLine(chapter, i) {
-    var chapterLine = "{x      " + chapter.title;
-    for (let j = 0; j <= 71 - chapterLine.length; j++) {
+    var chapterLine = input.color + chapter.title;
+    for (let j = 0; j <= input.columns - chapterLine.length; j++) {
         chapterLine += ".";
     }
     chapterLine += " ";
