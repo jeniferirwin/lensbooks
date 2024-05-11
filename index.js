@@ -4,26 +4,17 @@ let output = "bookoutput";
 
 function OnInputChange() {
     var text = document.getElementById(input).value;
+    var chapters = GetChapters(text);
     var wrapped = WordWrap(text);
-    document.getElementById(wysiwyg).innerHTML = wrapped.replace("\n\r", "<br>");
+    document.getElementById(wysiwyg).innerHTML = WYSIWYGColorize(wrapped.replace("\n", "<br>"));
     document.getElementById(output).value = wrapped;
+    //document.getElementById(output).value = wrapped;
 }
 
-function ColorLength(string) {
-    let count = 0;
-    let skip = false;
-    for (let i = 0; i < string.length; i++) {
-        if (skip == true) {
-            skip = false;
-            continue;
-        }
-        if (string[i] == "{") {
-            skip = true;
-            continue;
-        }
-        count++;
-    }   
-    return count;
+function GetChapters(text) {
+    chapters = [];
+    chapter = text.split(new RegExp("=== (.+)\n"), -1);
+    return chapters;
 }
 
 function WordWrap(text) {
@@ -54,8 +45,10 @@ function WordWrap(text) {
 
         next = NextSpace(i, text);
 
-        if (count + (next - i) >= 78) {
-            wrapped += "\n{x";
+        // I'm not entirely sure why we need the +1 here, but
+        // it goes over the limit if we don't.
+        if (count + (next - i + 1) >= 78) {
+            wrapped = wrapped.trimEnd() + "\n{x";
             wrapped += text[i];
             count = 0;
             continue;
@@ -69,7 +62,7 @@ function WordWrap(text) {
 
 function NextSpace(pos, string) {
     for (let i = pos; i < string.length; i++) {
-        if (string[i] == " ") {
+        if (string[i] == " " || string[i] == "\n") {
             return i;
         }
     }
@@ -77,8 +70,21 @@ function NextSpace(pos, string) {
 }
 
 function WYSIWYGColorize(string) {
-    string = string.replace("{x", "</span><span class='clear'>");
-    string = string.replace("{r", "</span><span class='red'>");
-    string = string.replace("{R", "</span><span class='bred'>");
+    string = string.replace(new RegExp("\n", "g"), "<br>");
+    string = string.replace(new RegExp("{x", "g"), "<span class='white'>");
+    string = string.replace(new RegExp("{r", "g"), "<span class='red'>");
+    string = string.replace(new RegExp("{g", "g"), "<span class='green'>");
+    string = string.replace(new RegExp("{y", "g"), "<span class='yellow'>");
+    string = string.replace(new RegExp("{b", "g"), "<span class='blue'>");
+    string = string.replace(new RegExp("{m", "g"), "<span class='magenta'>");
+    string = string.replace(new RegExp("{c", "g"), "<span class='cyan'>");
+    string = string.replace(new RegExp("{w", "g"), "<span class='white'>");
+    string = string.replace(new RegExp("{R", "g"), "<span class='bred'>");
+    string = string.replace(new RegExp("{G", "g"), "<span class='bgreen'>");
+    string = string.replace(new RegExp("{Y", "g"), "<span class='byellow'>");
+    string = string.replace(new RegExp("{B", "g"), "<span class='bblue'>");
+    string = string.replace(new RegExp("{M", "g"), "<span class='bmagenta'>");
+    string = string.replace(new RegExp("{C", "g"), "<span class='bcyan'>");
+    string = string.replace(new RegExp("{W", "g"), "<span class='bwhite'>");
     return string;
 }
