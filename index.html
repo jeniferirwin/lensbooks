@@ -24,20 +24,20 @@
         functions and caveats you need to know about.
       </p>
     </div>
-  <hr width="90%" align="center">
+  <hr width="80%" align="center">
   <div id="details">
     <table>
       <tr>
         <td>Restring Keyword</td>
-        <td><input id="keywordinput" name="keywordinput" placeholder="book" oninput="OnInputChange()"></input></td>
+        <td><input id="keywordinput" name="keywordinput" value="book" placeholder="book" oninput="OnInputChange()"></input></td>
       </tr>
       <tr>
         <td>Title</td>
-        <td><input id="titleinput" name="titleinput" placeholder="Title" oninput="OnInputChange()"></input></td>
+        <td><input id="titleinput" name="titleinput" value="Title" placeholder="Title" oninput="OnInputChange()"></input></td>
       </tr>
       <tr>
         <td>Author</td>
-        <td><input id="authorinput" name="authorinput" placeholder="Author" oninput="OnInputChange()"></input></td>
+        <td><input id="authorinput" name="authorinput" value="Author" placeholder="Author" oninput="OnInputChange()"></input></td>
       </tr>
       <tr>
         <td>Tagline (optional)</td>
@@ -45,22 +45,25 @@
       </tr>
       <tr>
         <td>Default Color</td>
-        <td><input id="colorinput" name="colorinput" placeholder="{x" oninput="OnInputChange()"></input></td>
+        <td><input id="colorinput" name="colorinput" value="{x" placeholder="{x" oninput="OnInputChange()"></input></td>
+      </tr>
+      <tr>
+        <td>UI Color</td>
+        <td><input id="uicolorinput" name="uicolorinput" value="{c" placeholder="{c" oninput="OnInputChange()"></input></td>
       </tr>
       <tr>
         <td>Max Columns</td>
-        <td><input id="columnsinput" name="columnsinput" placeholder="78" oninput="OnInputChange()"></input></td>
+        <td><input id="columnsinput" name="columnsinput" placeholder="78" value="78" oninput="OnInputChange()"></input></td>
       </tr>
       <tr>
         <td>Max Rows</td>
-        <td><input id="rowsinput" name="rowsinput" placeholder="24" oninput="OnInputChange()"></input></td>
+        <td><input id="rowsinput" name="rowsinput" placeholder="24" value="24" oninput="OnInputChange()"></input></td>
       </tr>
     </table>
   </div>
-  <hr width="90%" align="center">
-  <br>
-  <div id="upper">
-    <div id="div-bookinput">
+  <hr width="80%" align="center">
+  <h2 align="center">INPUT</h2>
+<div class="textbox" id="div-bookinput">
 <textarea id="bookinput" name="bookinput" oninput="OnInputChange()">
 === THE GOLEM
 {yPowerful {<{ra{Dr{wom{Da{rs{> practically billow in a vortex out of the steam-powered door
@@ -82,12 +85,13 @@
 {yit's like there's a darkly {<{Dcl{yockwo{Drk{>-themed party forever going on even when
 {yno one else is here.{x
 </textarea>
-    </div>
-    <div id="wysiwyg">
-    </div>
+</div>
+  <h2 align="center">WYSIWYG</h2>
+  <div class="textbox" id="wysiwyg">
   </div>
-  <div id="div-bookoutput">
-    <textarea cols="78" rows="24" id="bookoutput" name="bookoutput"></textarea>
+  <h2 align="center">COMMANDS</h2>
+  <div class="textbox" id="div-bookoutput">
+    <textarea id="bookoutput" name="bookoutput"></textarea>
   </div>
   <script>OnInputChange();</script>
   </body>
