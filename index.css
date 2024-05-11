@@ -124,9 +124,11 @@ h3
 
 #wysiwyg
 {
-    overflow-y:auto;
+    overflow-y: scroll;
     border-style:groove;
-    flex: 50%;
+    border-color: gray;
+    padding: calc(1ch * 1);
+    width: calc(1ch * 82);
     margin-left: 5%;
     height: 100%;
     box-sizing: inherit;
@@ -138,7 +140,6 @@ h3
 {
     background-color: gray;
     border-style:groove;
-    flex: 50%;
     height: 100%;
     box-sizing: inherit;
     -webkit-box-sizing: inherit;
@@ -149,8 +150,11 @@ h3
 {
     background-color: #222222;
     color: #ffffff;
-    width: 100%;
+    font-family: monospace;
+    width: calc(1ch * 81);
     height: 100%;
+    resize: none;
+    overflow-y: scroll;
     box-sizing: inherit;
     -webkit-box-sizing: inherit;
     -moz-box-sizing: inherit;
@@ -186,3 +190,19 @@ h3
     width: 90%;
     margin-left: 5%;
 }
+
+.red { color: red; font-weight: normal; }
+.green { color: green; font-weight: normal; }
+.yellow { color: yellow; font-weight: normal; }
+.blue { color: blue; font-weight: normal; }
+.magenta { color: magenta; font-weight: normal; }
+.cyan { color: cyan; font-weight: normal; }
+.white { color: white; font-weight: normal;}
+
+.bred { color: red; font-weight: bolder; }
+.bgreen { color: green; font-weight: bolder; }
+.byellow { color: yellow; font-weight: bolder; }
+.bblue { color: blue; font-weight: bolder; }
+.bmagenta { color: magenta; font-weight: bolder; }
+.bcyan { color: cyan; font-weight: bolder; }
+.bwhite { color: white; font-weight: bolder; }
