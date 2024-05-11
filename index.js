@@ -2,22 +2,39 @@ let input = "bookinput";
 let wysiwyg = "wysiwyg";
 let output = "bookoutput";
 
+/**
+ * Handles the input change event and updates the WYSIWYG editor and output textarea based on the input text.
+ *
+ * @return {void} This function does not return a value.
+ */
 function OnInputChange() {
     var text = document.getElementById(input).value;
     document.getElementById(wysiwyg).innerHTML = "";
     document.getElementById(output).value = "";
     var chapters = GetChapters(text);
+    for (let i = 0; i < chapters.length; i++) {
+        console.log("Splitting...");
+        chapters[i].pages = SplitIntoPages(chapters[i]);
+    }
     console.log(chapters);
     if (chapters == 0 || chapters.length % 2 != 0) {
         document.getElementById(wysiwyg).innerHTML = "Please enter at least one chapter and some text for it.";
         document.getElementById(output).value = "Please enter at least one chapter and some text for it.";
         return;
+    } else {
+        
     }
     //document.getElementById(wysiwyg).innerHTML = WYSIWYGColorize(wrapped.replace("\n", "<br>"));
     //document.getElementById(output).value = wrapped;
     //document.getElementById(output).value = wrapped;
 }
 
+/**
+ * Splits the input text into chunks based on a specific pattern, extracts chapters, and returns them.
+ *
+ * @param {string} text - The input text containing chapters.
+ * @return {array} An array of extracted chapters.
+ */
 function GetChapters(text) {
     chunks = text.split(new RegExp("=== (.+)\n"), -1);
     chunks.splice(0, 1);
@@ -30,6 +47,13 @@ function GetChapters(text) {
     return chapters;
 }
 
+/**
+ * WordWrap function wraps the input text the same way that Lensmoor does,
+ * taking color codes into account.
+ *
+ * @param {string} text - The text to be wrapped
+ * @return {string} The wrapped text
+ */
 function WordWrap(text) {
     var wrapped = "{x";
     var skip = false;
@@ -58,8 +82,8 @@ function WordWrap(text) {
 
         next = NextSpace(i, text);
 
-        // I'm not entirely sure why we need the +1 here, but
-        // it goes over the limit if we don't.
+        // the +1 is needed to account for the character at the
+        // current position i
         if (count + (next - i + 1) >= 78) {
             wrapped = wrapped.trimEnd() + "\n{x";
             wrapped += text[i];
@@ -73,6 +97,13 @@ function WordWrap(text) {
     return wrapped;
 }
 
+/**
+ * Finds the next space or newline character in a string starting from a given position.
+ *
+ * @param {number} pos - The position to start searching from.
+ * @param {string} string - The string to search in.
+ * @return {number} The index of the next space or newline character, or the length of the string if none is found.
+ */
 function NextSpace(pos, string) {
     for (let i = pos; i < string.length; i++) {
         if (string[i] == " " || string[i] == "\n") {
@@ -82,8 +113,13 @@ function NextSpace(pos, string) {
     return string.length; 
 }
 
+/**
+ * Function to colorize text in the WYSIWYG editor.
+ *
+ * @param {string} string - The input string to be colorized.
+ * @return {string} The colorized string.
+ */
 function WYSIWYGColorize(string) {
-    string = string.replace(new RegExp("\n", "g"), "<br>");
     string = string.replace(new RegExp("{x", "g"), "<span class='white'>");
     string = string.replace(new RegExp("{r", "g"), "<span class='red'>");
     string = string.replace(new RegExp("{g", "g"), "<span class='green'>");
@@ -99,12 +135,43 @@ function WYSIWYGColorize(string) {
     string = string.replace(new RegExp("{M", "g"), "<span class='bmagenta'>");
     string = string.replace(new RegExp("{C", "g"), "<span class='bcyan'>");
     string = string.replace(new RegExp("{W", "g"), "<span class='bwhite'>");
+    string = string.replace(new RegExp("<span", "g"), "</span><span");
+    string = string.replace(new RegExp("^</span", "g"), "");
+    string = string.replace(new RegExp("$", "g"), "</span>");
+    string = string.replace(new RegExp("\n", "g"), "<br>");
     return string;
+}
+
+function SplitIntoPages(chapter) {
+    var pages = [];
+    pages.push(new Page());
+    var count = 0;
+    var string = "";
+    for (let i = 0; i < chapter.text.length; i++) {
+        if (chapter.text[i] == "*" && chapter[i + 1] == "*" && chapter[i + 2] == "*" && chapter[i + 3] == "\n") {
+            i += 4;
+            count = 0;
+            pages.push(new Page());
+        }
+        
+        if (chapter.text[i] == "\n") {
+            count++;
+        }
+
+        pages[pages.length - 1].text += chapter.text[i];
+
+        if (count > 5) {
+            pages.push(new Page());
+            count = 0;
+        }
+
+    }
+    return pages;
 }
 
 class Page {
 
-    constructor() {
+    constructor(text) {
         this.text = "";
     }
 }
@@ -114,5 +181,36 @@ class Chapter {
     constructor(title, text) {
         this.title = title;
         this.text = text;
+        this.pages = [];
+    }
+}
+
+function CreateTableOfContents(chapters) {
+    string = "";
+    totalPages = 0;
+    for (let i = 0; i <= 78; i++) {
+        string += "{x=";
+    }
+    string += "{x";
+    
+
+    for (let i = 0; i < chapters.length; i++) {
+        var chapterLine = "{x      " + chapters[i].title;
+        for (let j = 0; j <= 71 - chapterLine.length; j++) {
+            chapterLine += ".";
+        }
+        chapterLine += " ";
+        if (totalPages < 10) {
+            chapterLine += "0" + totalPages;
+        } else {
+            chapterLine += totalPages;
+        }
+        string += chapterLine;
+    }
+
+
+    string += "{x";
+    for (let i = 0; i <= 78; i++) {
+        string += "{x=";
     }
 }
