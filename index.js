@@ -12,21 +12,50 @@ function OnInputChange() {
     document.getElementById(wysiwyg).innerHTML = "";
     document.getElementById(output).value = "";
     var chapters = GetChapters(text);
+
     for (let i = 0; i < chapters.length; i++) {
-        console.log("Splitting...");
         chapters[i].pages = SplitIntoPages(chapters[i]);
     }
+
+    chapters = AssignPageNumbers(chapters);    
+
     console.log(chapters);
-    if (chapters == 0 || chapters.length % 2 != 0) {
+    var toc = CreateTableOfContents(chapters);
+    if (chapters == null || chapters.length < 1) {
         document.getElementById(wysiwyg).innerHTML = "Please enter at least one chapter and some text for it.";
         document.getElementById(output).value = "Please enter at least one chapter and some text for it.";
         return;
     } else {
-        
+        string += toc;
+        for (let i = 0; i < chapters.length; i++) {
+            for (let j = 0; j < chapters[i].pages.length; j++) {
+                string += chapters[i].title + ": " + chapters[i].pages[j].number + "\n";
+                string += chapters[i].pages[j].text;
+            }
+        }
+        document.getElementById(wysiwyg).innerHTML = WYSIWYGColorize(string);
+        document.getElementById(output).value = WYSIWYGColorize(string);
     }
     //document.getElementById(wysiwyg).innerHTML = WYSIWYGColorize(wrapped.replace("\n", "<br>"));
     //document.getElementById(output).value = wrapped;
     //document.getElementById(output).value = wrapped;
+}
+
+/**
+ * Assigns page numbers to each page in the given chapters.
+ *
+ * @param {Array} chapters - An array of chapter objects.
+ * @return {Array} The updated chapters array with page numbers assigned.
+ */ 
+function AssignPageNumbers(chapters) {
+    var pageCount = 1;
+    for (let i = 0; i < chapters.length; i++) {
+        for (let j = 0; j < chapters[i].pages.length; j++) {
+            chapters[i].pages[j].number = pageCount;
+            pageCount++;
+        }
+    }
+    return chapters;
 }
 
 /**
@@ -135,13 +164,20 @@ function WYSIWYGColorize(string) {
     string = string.replace(new RegExp("{M", "g"), "<span class='bmagenta'>");
     string = string.replace(new RegExp("{C", "g"), "<span class='bcyan'>");
     string = string.replace(new RegExp("{W", "g"), "<span class='bwhite'>");
+    string = string.replace(new RegExp("{D", "g"), "<span class='bblack'>");
     string = string.replace(new RegExp("<span", "g"), "</span><span");
-    string = string.replace(new RegExp("^</span", "g"), "");
+    string = string.replace(new RegExp("^</span>", "g"), "");
     string = string.replace(new RegExp("$", "g"), "</span>");
     string = string.replace(new RegExp("\n", "g"), "<br>");
     return string;
 }
 
+/**
+ * Splits the input text into pages based on a specific pattern, extracts pages, and returns them.
+ *
+ * @param {Object} chapter - The input chapter object containing text.
+ * @return {Array} An array of extracted pages.
+ */
 function SplitIntoPages(chapter) {
     var pages = [];
     pages.push(new Page());
@@ -178,6 +214,7 @@ class Page {
 
     constructor(text) {
         this.text = "";
+        this.number = -1;
     }
 }
 
@@ -190,13 +227,18 @@ class Chapter {
     }
 }
 
+/**
+ * Creates a table of contents based on the given chapters.
+ *
+ * @param {Array} chapters - An array of chapter objects.
+ * @return {string} The generated table of contents.
+ */
 function CreateTableOfContents(chapters) {
-    string = "";
-    totalPages = 0;
+    string = "{x";
     for (let i = 0; i <= 78; i++) {
-        string += "{x=";
+        string += "=";
     }
-    string += "{x";
+    string += "\n";
     
 
     for (let i = 0; i < chapters.length; i++) {
@@ -205,17 +247,23 @@ function CreateTableOfContents(chapters) {
             chapterLine += ".";
         }
         chapterLine += " ";
-        if (totalPages < 10) {
-            chapterLine += "0" + totalPages;
+        if (chapters[i].pages[0].number < 10) {
+            chapterLine += "0" + chapters[i].pages[0].number;
         } else {
-            chapterLine += totalPages;
+            chapterLine += chapters[i].pages[0].number;
         }
+        if (chapters[i].pages.length > 1) {
+            chapterLine += " - " + chapters[i].pages[chapters[i].pages.length - 1].number;
+        }
+        
         string += chapterLine;
     }
 
 
     string += "{x";
     for (let i = 0; i <= 78; i++) {
-        string += "{x=";
+        string += "=";
     }
+    string += "\n";
+    return string;
 }
