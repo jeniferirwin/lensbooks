@@ -26,13 +26,22 @@
     </div>
   <div id="upper">
     <div id="div-bookinput">
-        <textarea id="bookinput" name="bookinput" oninput="OnInputChange()"></textarea>
+        <textarea id="bookinput" name="bookinput" oninput="OnInputChange()">
+=== CHAPTER ONE
+This is some test text that we can word wrap with. Now we're going up to 78 c
+
+We can also test blank lines with it.
+
+=== CHAPTER TWO
+Let's also test some {rcolor{x so that it wraps properly. And now we're going to do some run on sentences because we're really good at that. Let's see if it wraps properly. I sure hope it does. This should probably be about {Ythree{x or four lines by this point.
+</textarea>
     </div>
     <div id="wysiwyg">
     </div>
   </div>
   <div id="div-bookoutput">
-    <textarea id="bookoutput" name="bookoutput"></textarea>
+    <textarea cols="78" rows="24" id="bookoutput" name="bookoutput"></textarea>
   </div>
+  <script>OnInputChange();</script>
   </body>
 </html>
