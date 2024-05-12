@@ -65,12 +65,13 @@ function OnInputChange() {
         return;
     }
 
+    string += "\n<hr>\n";
     for (let i = 0; i < chapters.length; i++) {
         for (let j = 0; j < chapters[i].pages.length; j++) {
             string += GeneratePageHeader(chapters[i].pages[j], input);
             string += chapters[i].pages[j].text;
             string += GeneratePageFooter(chapters, chapters[i].pages[j], input);
-            string += "\n\n\n";
+            string += "\n<hr>\n";
         }
     }
     output.wysiwyg.innerHTML = WYSIWYGColorize(string.replace(/ /g, "&nbsp"));
