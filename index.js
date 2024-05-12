@@ -456,7 +456,7 @@ function GeneratePageFooter(chapters, page, input) {
         }
         flipper = !flipper;
     }
-    return input.color + "\n" + input.uicolor + pageFooterLeft + pageFooterCenter + pageFooterRight + "\n";
+    return input.color + "\n" + input.uicolor + pageFooterLeft + pageFooterCenter + pageFooterRight + "{x\n";
 }
 
 function TotalPages(chapters) {
@@ -468,7 +468,7 @@ function CreateBar(input) {
     for (let i = 0; i < (input.columns - 2); i++) {
         bar += "=";
     }
-    bar += "+\n";
+    bar += "+{x\n";
     bar = input.uicolor + bar;
     return bar;
 }
