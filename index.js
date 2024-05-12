@@ -165,17 +165,19 @@ function WordWrap(text, input) {
     var skip = false;
     var count = 0;
     var next = 0;
+    var lastcolor = input.color;
 
     for (let i = 0; i < text.length; i++) {
 
         if (text[i] == "\n") {
-            wrapped += "\n" + input.color;
+            wrapped += "\n" + lastcolor;
             count = 0;
             continue;
         }
         
         if (skip) {
             wrapped += text[i];
+            lastcolor = "{" + text[i];
             skip = false;
             continue;
         }
@@ -191,7 +193,7 @@ function WordWrap(text, input) {
         // the +1 is needed to account for the character at the
         // current position i
         if (count + (next - i + 1) >= input.columns) {
-            wrapped = wrapped.trimEnd() + "\n" + input.color;
+            wrapped = wrapped.trimEnd() + "\n" + lastcolor;
             wrapped += text[i];
             count = 0;
             continue;
@@ -314,7 +316,7 @@ function CenterText(string, input) {
     var blank2 = "";
     var flipper = false;
     for (let i = stringLength; i <= input.columns; i++) {
-        if (ColorStringLength(blank + string + blank2, input) >= input.columns - 2) {
+        if (ColorStringLength(blank + string + blank2, input) == input.columns - 2) {
             break;
         }
         if (flipper) {
@@ -351,7 +353,7 @@ function CreateTableOfContents(chapters, input) {
 function ColorStringLength(string, input) {
     var stringLength = 0;
     for (let i = 0; i < string.length; i++) {
-        if (string[i] == "{" && string[i + 1] == input.color[1]) {
+        if (string[i] == "{" && string[i + 1] != "{") {
             i++;
             continue;
         } else {
@@ -363,11 +365,11 @@ function ColorStringLength(string, input) {
 
 function OneChapterLine(chapter, i, input) {
     var chapterLine = input.uicolor + "| " + input.color + chapter.title + " ";
-    var offset = 9;
+    var offset = 10;
     if (chapter.pages[chapter.pages.length - 1].number >= 100) {
-        offset = 10;
+        offset = 11;
     }
-    for (let j = ColorStringLength(chapterLine, input); j <= input.columns - offset; j++) {
+    for (let j = ColorStringLength(chapterLine, input); j < input.columns - offset; j++) {
         chapterLine += ".";
     }
     chapterLine += " ";
@@ -386,7 +388,7 @@ function OneChapterLine(chapter, i, input) {
         }
         chapterLine += last;
     }
-    for (let j = ColorStringLength(chapterLine, input); j <= input.columns; j++) {
+    for (let j = ColorStringLength(chapterLine, input); j < input.columns - 1; j++) {
         chapterLine += " ";
     }
     
