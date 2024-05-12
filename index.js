@@ -156,7 +156,7 @@ function GetChapters(text) {
  * @return {string} The wrapped text
  */
 function WordWrap(text, input) {
-    var wrapped = "{x";
+    var wrapped = input.color;
     var skip = false;
     var count = 0;
     var next = 0;
@@ -164,7 +164,7 @@ function WordWrap(text, input) {
     for (let i = 0; i < text.length; i++) {
 
         if (text[i] == "\n") {
-            wrapped += "\n{x";
+            wrapped += "\n" + input.color;
             count = 0;
             continue;
         }
@@ -186,7 +186,7 @@ function WordWrap(text, input) {
         // the +1 is needed to account for the character at the
         // current position i
         if (count + (next - i + 1) >= input.columns) {
-            wrapped = wrapped.trimEnd() + "\n{x";
+            wrapped = wrapped.trimEnd() + "\n" + input.color;
             wrapped += text[i];
             count = 0;
             continue;
@@ -271,17 +271,12 @@ function SplitIntoPages(chapter, input) {
         }
 
         if (count > input.rows) {
-            while (pages[pages.length - 1].text.endsWith("\n" + input.color + "\n")) {
-                console.log("Before" + pages[pages.length - 1].text);
-                pages[pages.length - 1].text = pages[pages.length - 1].text.slice(0, -3);
-                console.log("After" + pages[pages.length - 1].text);
-            }
             pages.push(new Page(chapter));
             count = 0;
         }
 
     }
-    if (pages[pages.length - 1].text == "{x\n" || pages[pages.length - 1].text == "{x") {
+    if (pages[pages.length - 1].text == "{x\n" || pages[pages.length - 1].text == "{x" || pages[pages.length - 1].text == "") {
         pages.pop();
     }
     return pages;
