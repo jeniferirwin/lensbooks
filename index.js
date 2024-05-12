@@ -75,7 +75,10 @@ function OnInputChange() {
     }
     output.wysiwyg.innerHTML = WYSIWYGColorize(string.replace(/ /g, "&nbsp"));
 
-    var string = CreateTableOfContents(chapters, input);
+    var string = "buy " + input.keyword + " extra\n";
+    string += "contents\n";
+    string += CreateTableOfContents(chapters, input);
+    string += "@\n";
     for (let i = 0; i < chapters.length; i++) {
         for (let j = 0; j < chapters[i].pages.length; j++) {
             string += "buy " + input.keyword + " extra\n";
@@ -85,8 +88,10 @@ function OnInputChange() {
             else {
                 string += chapters[i].pages[j].number + "\n";
             }
-            string += chapters[i].title + ": " + chapters[i].pages[j].number + "\n";
+            string += "/*\n";
+            string += GeneratePageHeader(chapters[i].pages[j], input);
             string += chapters[i].pages[j].text;
+            string += GeneratePageFooter(chapters, chapters[i].pages[j], input);
             string += "@\n";
         }
     }
@@ -273,6 +278,10 @@ function SplitIntoPages(chapter, input) {
         if (count > input.rows) {
             pages.push(new Page(chapter));
             count = 0;
+            if (chapter.wrapped[i + 1] == "{" && chapter.wrapped[i + 2] == input.color[1] && chapter.wrapped[i + 3] == "\n") {
+                console.log("got it");
+                i += 3;
+            }
         }
 
     }
@@ -300,8 +309,42 @@ class Chapter {
     }
 }
 
+function CenterText(string, input) {
+    var stringLength = ColorStringLength(string, input);
+    var blank = "";
+    var blank2 = "";
+    var flipper = false;
+    for (let i = ColorStringLength(string, input); i <= input.columns; i++) {
+        console.log(ColorStringLength(blank + string + blank2, input));
+        if (ColorStringLength(blank + string + blank2, input) > input.columns - 4) {
+            break;
+        }
+        if (flipper) {
+            blank += " ";
+            flipper = false;
+        } else {
+            blank2 += " ";
+            flipper = true;
+        }
+    }
+    return input.uicolor + "|" + blank + string + blank2 + input.uicolor + "|" + "\n";
+}
+
 function CreateTableOfContents(chapters, input) {
-    var tocString = CreateBar(input);    
+    var tocString = CreateBar(input);
+    var titleString = input.color + input.title;
+    var authorString = input.color + input.author;
+    var taglineString = input.color + input.tagline;
+    tocString += CenterText(titleString, input);
+    tocString += CenterText(authorString, input);
+    if (input.tagline != "") {
+        tocString += CenterText(taglineString, input);
+    }
+    tocString += input.uicolor + "|";
+    for (let i = 0; i < input.columns - 2; i++) {
+        tocString += " ";
+    }
+    tocString += input.uicolor + "|" + "\n";
     for (let i = 0; i < chapters.length; i++) {
         tocString += OneChapterLine(chapters[i], i, input);
     }
@@ -309,9 +352,25 @@ function CreateTableOfContents(chapters, input) {
     return tocString;
 }
 
+function ColorStringLength(string, input) {
+    var stringLength = 0;
+    for (let i = 0; i < string.length; i++) {
+        if (string[i] == "{" && string[i + 1] == input.color[1]) {
+            i += 2;
+            continue;
+        }
+        stringLength++;
+    }
+    return stringLength;
+}
+
 function OneChapterLine(chapter, i, input) {
-    var chapterLine = input.color + chapter.title + " ";
-    for (let j = 0; j <= input.columns - chapterLine.length; j++) {
+    var chapterLine = input.uicolor + "| " + input.color + chapter.title + " ";
+    var offset = 10;
+    if (chapter.pages[chapter.pages.length - 1].number >= 100) {
+        offset = 11;
+    }
+    for (let j = ColorStringLength(chapterLine, input); j <= input.columns - offset; j++) {
         chapterLine += ".";
     }
     chapterLine += " ";
@@ -330,7 +389,11 @@ function OneChapterLine(chapter, i, input) {
         }
         chapterLine += last;
     }
-    chapterLine += "\n";
+    for (let j = ColorStringLength(chapterLine, input); j <= input.columns - 1; j++) {
+        chapterLine += " ";
+    }
+    
+    chapterLine += input.uicolor + "|\n";
     
     return chapterLine;
 }
@@ -352,7 +415,7 @@ function GeneratePageHeader(page, input) {
         pageHeaderSpace += " ";
     }
     
-    return pageHeaderLeft + pageHeaderSpace + pageHeaderRight + "\n";
+    return input.uicolor + pageHeaderLeft + pageHeaderSpace + pageHeaderRight + "\n" + input.color + "\n";
 }
 
 function GeneratePageFooter(chapters, page, input) {
@@ -362,26 +425,26 @@ function GeneratePageFooter(chapters, page, input) {
 
     if (page.number > 1) {
         if (page.number < 9) {
-            pageFooterLeft += "[read 0" + (page.number - 1) + "]";
+            pageFooterLeft += "[read page0" + (page.number - 1) + "] <<";
         } else {
-            pageFooterLeft += "[read " + (page.number - 1) + "]";
+            pageFooterLeft += "[read page" + (page.number - 1) + "] <<";
         }
     } else {
-        pageFooterLeft += "[read contents]";
+        pageFooterLeft += "[read contents] <<";
     }
 
     if (page.number + 1 <= TotalPages(chapters)) {
         if (page.number < 9) {
-            pageFooterRight += "[read 0" + (page.number + 1) + "]";
+            pageFooterRight += ">> [read page0" + (page.number + 1) + "]";
         } else {
-            pageFooterRight += "[read " + (page.number + 1) + "]";
+            pageFooterRight += ">> [read page" + (page.number + 1) + "]";
         }
     } else {
-        pageFooterRight += "";
+        pageFooterRight += "(END)";
     }
     
     if (page.number > 1) {
-        pageFooterCenter = "[read contents]";
+        pageFooterCenter = " >> [read contents] << ";
     }
     
     var remaining = input.columns - (pageFooterLeft.length + pageFooterRight.length + pageFooterCenter.length);
@@ -394,11 +457,11 @@ function GeneratePageFooter(chapters, page, input) {
         }
         flipper = !flipper;
     }
-    return input.uicolor + pageFooterLeft + pageFooterCenter + pageFooterRight + "\n";
+    return input.color + "\n" + input.uicolor + pageFooterLeft + pageFooterCenter + pageFooterRight + "\n";
 }
 
 function TotalPages(chapters) {
-    return chapters[chapters.length - 1].pages.length;
+    return chapters[chapters.length - 1].pages[chapters[chapters.length - 1].pages.length - 1].number;
 }
 
 function CreateBar(input) {
