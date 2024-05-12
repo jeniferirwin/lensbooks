@@ -43,21 +43,22 @@ class Output {
 function OnInputChange() {
     var input = new Input();
     var output = new Output();
-    console.log(input);
     output.wysiwyg.innerHTML = "";
     output.cmds.value = "";
     var chapters = GetChapters(input.text);
+    
+    for (let i = 0; i < chapters.length; i++) {
+        chapters[i].wrapped = WordWrap(chapters[i].text, input);
+    }
 
     for (let i = 0; i < chapters.length; i++) {
-        chapters[i].pages = SplitIntoPages(chapters[i]);
+        chapters[i].pages = SplitIntoPages(chapters[i], input);
     }
 
     chapters = AssignPageNumbers(chapters);    
 
-    console.log(chapters);
     var string = CreateTableOfContents(chapters, input);
 
-    console.log(string);
     if (!SanityCheck(input, chapters)) {
         output.wysiwyg.innerHTML = errString;
         output.cmds.value = errString;
@@ -66,13 +67,30 @@ function OnInputChange() {
 
     for (let i = 0; i < chapters.length; i++) {
         for (let j = 0; j < chapters[i].pages.length; j++) {
-            string += chapters[i].title + ": " + chapters[i].pages[j].number + "\n";
+            string += GeneratePageHeader(chapters[i].pages[j], input);
             string += chapters[i].pages[j].text;
+            string += GeneratePageFooter(chapters, chapters[i].pages[j], input);
+            string += "\n\n\n";
         }
     }
-
     output.wysiwyg.innerHTML = WYSIWYGColorize(string.replace(/ /g, "&nbsp"));
-    output.cmds.value = WYSIWYGColorize(string);
+
+    var string = CreateTableOfContents(chapters, input);
+    for (let i = 0; i < chapters.length; i++) {
+        for (let j = 0; j < chapters[i].pages.length; j++) {
+            string += "buy " + input.keyword + " extra\n";
+            if (chapters[i].pages[j].number < 10) {
+                string += "page0" + chapters[i].pages[j].number + "\n";
+            }
+            else {
+                string += chapters[i].pages[j].number + "\n";
+            }
+            string += chapters[i].title + ": " + chapters[i].pages[j].number + "\n";
+            string += chapters[i].pages[j].text;
+            string += "@\n";
+        }
+    }
+    output.cmds.value = string;
 }
 
 function SanityCheck(input, chapters) {
@@ -119,12 +137,12 @@ function AssignPageNumbers(chapters) {
  * @return {array} An array of extracted chapters.
  */
 function GetChapters(text) {
-    chunks = text.split(new RegExp("=== (.+)\n"), -1);
+    chunks = text.split(new RegExp(/===(.+)\n/), -1);
     chunks.splice(0, 1);
     chapters = [];
     for (let i = 0; i < chunks.length; i++) {
         if (i % 2 == 0) {
-            chapters.push(new Chapter(chunks[i], chunks[i + 1]));
+            chapters.push(new Chapter(chunks[i].trimEnd().trimStart(), chunks[i + 1]));
         }
     }
     return chapters;
@@ -167,7 +185,7 @@ function WordWrap(text, input) {
 
         // the +1 is needed to account for the character at the
         // current position i
-        if (count + (next - i + 1) >= 78) {
+        if (count + (next - i + 1) >= input.columns) {
             wrapped = wrapped.trimEnd() + "\n{x";
             wrapped += text[i];
             count = 0;
@@ -232,33 +250,38 @@ function WYSIWYGColorize(string) {
  * @param {Object} chapter - The input chapter object containing text.
  * @return {Array} An array of extracted pages.
  */
-function SplitIntoPages(chapter) {
+function SplitIntoPages(chapter, input) {
     var pages = [];
     pages.push(new Page(chapter));
     var count = 0;
     var string = "";
-    for (let i = 0; i < chapter.text.length; i++) {
-        if (chapter.text[i] == "*" && chapter[i + 1] == "*" && chapter[i + 2] == "*" && chapter[i + 3] == "\n") {
+    for (let i = 0; i < chapter.wrapped.length; i++) {
+        if (chapter.wrapped[i] == "*" && chapter.wrapped[i + 1] == "*" && chapter.wrapped[i + 2] == "*" && chapter.wrapped[i + 3] == "\n") {
             i += 4;
             count = 0;
-            pages.push(new Page());
+            pages.push(new Page(chapter));
         }
         
-        if (chapter.text[i] == "\n") {
+        if (chapter.wrapped[i] == "\n") {
             count++;
         }
 
-        if (chapter.text[i] != '') {
-            pages[pages.length - 1].text += chapter.text[i];
+        if (chapter.wrapped[i] != '') {
+            pages[pages.length - 1].text += chapter.wrapped[i];
         }
 
-        if (count > 5) {
+        if (count > input.rows) {
+            while (pages[pages.length - 1].text.endsWith("\n" + input.color + "\n")) {
+                console.log("Before" + pages[pages.length - 1].text);
+                pages[pages.length - 1].text = pages[pages.length - 1].text.slice(0, -3);
+                console.log("After" + pages[pages.length - 1].text);
+            }
             pages.push(new Page(chapter));
             count = 0;
         }
 
     }
-    if (pages[pages.length - 1].text == "") {
+    if (pages[pages.length - 1].text == "{x\n" || pages[pages.length - 1].text == "{x") {
         pages.pop();
     }
     return pages;
@@ -334,18 +357,14 @@ function GeneratePageHeader(page, input) {
         pageHeaderSpace += " ";
     }
     
-    return pageHeaderLeft + pageHeaderSpace + pageHeaderRight;
+    return pageHeaderLeft + pageHeaderSpace + pageHeaderRight + "\n";
 }
 
-function GeneratePageFooter(page, input) {
+function GeneratePageFooter(chapters, page, input) {
     let pageFooterLeft = "";
     let pageFooterRight = "";
     let pageFooterCenter = "";
 
-    if (page.number == 1) {
-        pageFooterLeft += "read contents";
-    }
-    
     if (page.number > 1) {
         if (page.number < 9) {
             pageFooterLeft += "[read 0" + (page.number - 1) + "]";
@@ -356,11 +375,11 @@ function GeneratePageFooter(page, input) {
         pageFooterLeft += "[read contents]";
     }
 
-    if (page.number + 1 <= TotalPages(page.chapter)) {
+    if (page.number + 1 <= TotalPages(chapters)) {
         if (page.number < 9) {
-            pageFooterRight += "[read 0" + page.number + 1 + "]";
+            pageFooterRight += "[read 0" + (page.number + 1) + "]";
         } else {
-            pageFooterRight += "[read " + page.number + 1 + "]";
+            pageFooterRight += "[read " + (page.number + 1) + "]";
         }
     } else {
         pageFooterRight += "";
@@ -373,18 +392,18 @@ function GeneratePageFooter(page, input) {
     var remaining = input.columns - (pageFooterLeft.length + pageFooterRight.length + pageFooterCenter.length);
     var flipper = true;
     for (let i = 0; i < remaining; i++) {
-        if (flipper) {
+        if (flipper == true) {
             pageFooterCenter += " ";
-        } {
+        } else {
             pageFooterCenter = " " + pageFooterCenter;
         }
         flipper = !flipper;
     }
-    return input.uicolor + pageFooterLeft + pageFooterCenter + pageFooterRight;
+    return input.uicolor + pageFooterLeft + pageFooterCenter + pageFooterRight + "\n";
 }
 
 function TotalPages(chapters) {
-    return chapters[chapters.length - 1].pages.length - 1;
+    return chapters[chapters.length - 1].pages.length;
 }
 
 function CreateBar(input) {
