@@ -275,7 +275,7 @@ function SplitIntoPages(chapter, input) {
             pages[pages.length - 1].text += chapter.wrapped[i];
         }
 
-        if (count > input.rows) {
+        if (count >= input.rows) {
             pages.push(new Page(chapter));
             count = 0;
             if (chapter.wrapped[i + 1] == "{" && chapter.wrapped[i + 2] == input.color[1] && chapter.wrapped[i + 3] == "\n") {
@@ -316,7 +316,7 @@ function CenterText(string, input) {
     var flipper = false;
     for (let i = ColorStringLength(string, input); i <= input.columns; i++) {
         console.log(ColorStringLength(blank + string + blank2, input));
-        if (ColorStringLength(blank + string + blank2, input) > input.columns - 4) {
+        if (ColorStringLength(blank + string + blank2, input) >= input.columns - 2) {
             break;
         }
         if (flipper) {
@@ -340,14 +340,12 @@ function CreateTableOfContents(chapters, input) {
     if (input.tagline != "") {
         tocString += CenterText(taglineString, input);
     }
-    tocString += input.uicolor + "|";
-    for (let i = 0; i < input.columns - 2; i++) {
-        tocString += " ";
-    }
-    tocString += input.uicolor + "|" + "\n";
+    tocString += CenterText("", input);
     for (let i = 0; i < chapters.length; i++) {
         tocString += OneChapterLine(chapters[i], i, input);
     }
+    tocString += CenterText("", input);
+    tocString += CenterText("type 'read page01' to begin", input);
     tocString += CreateBar(input);
     return tocString;
 }
@@ -356,7 +354,7 @@ function ColorStringLength(string, input) {
     var stringLength = 0;
     for (let i = 0; i < string.length; i++) {
         if (string[i] == "{" && string[i + 1] == input.color[1]) {
-            i += 2;
+            i += 1;
             continue;
         }
         stringLength++;
@@ -389,7 +387,7 @@ function OneChapterLine(chapter, i, input) {
         }
         chapterLine += last;
     }
-    for (let j = ColorStringLength(chapterLine, input); j <= input.columns - 1; j++) {
+    for (let j = ColorStringLength(chapterLine, input); j <= input.columns; j++) {
         chapterLine += " ";
     }
     
