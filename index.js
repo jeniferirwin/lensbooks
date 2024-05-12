@@ -86,7 +86,7 @@ function OnInputChange() {
                 string += "page0" + chapters[i].pages[j].number + "\n";
             }
             else {
-                string += chapters[i].pages[j].number + "\n";
+                string += "page" + chapters[i].pages[j].number + "\n";
             }
             string += "/*\n";
             string += GeneratePageHeader(chapters[i].pages[j], input);
