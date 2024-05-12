@@ -275,16 +275,15 @@ function SplitIntoPages(chapter, input) {
             pages[pages.length - 1].text += chapter.wrapped[i];
         }
 
-        if (count >= input.rows) {
+        if (count >= input.rows - 4) {
             pages.push(new Page(chapter));
             count = 0;
             if (chapter.wrapped[i + 1] == "{" && chapter.wrapped[i + 2] == input.color[1] && chapter.wrapped[i + 3] == "\n") {
-                console.log("got it");
                 i += 3;
             }
         }
-
     }
+    
     if (pages[pages.length - 1].text == "{x\n" || pages[pages.length - 1].text == "{x" || pages[pages.length - 1].text == "") {
         pages.pop();
     }
@@ -314,8 +313,7 @@ function CenterText(string, input) {
     var blank = "";
     var blank2 = "";
     var flipper = false;
-    for (let i = ColorStringLength(string, input); i <= input.columns; i++) {
-        console.log(ColorStringLength(blank + string + blank2, input));
+    for (let i = stringLength; i <= input.columns; i++) {
         if (ColorStringLength(blank + string + blank2, input) >= input.columns - 2) {
             break;
         }
@@ -336,7 +334,7 @@ function CreateTableOfContents(chapters, input) {
     var authorString = input.color + input.author;
     var taglineString = input.color + input.tagline;
     tocString += CenterText(titleString, input);
-    tocString += CenterText(authorString, input);
+    tocString += CenterText("by " + authorString, input);
     if (input.tagline != "") {
         tocString += CenterText(taglineString, input);
     }
@@ -354,19 +352,20 @@ function ColorStringLength(string, input) {
     var stringLength = 0;
     for (let i = 0; i < string.length; i++) {
         if (string[i] == "{" && string[i + 1] == input.color[1]) {
-            i += 1;
+            i++;
             continue;
+        } else {
+            stringLength++;
         }
-        stringLength++;
     }
     return stringLength;
 }
 
 function OneChapterLine(chapter, i, input) {
     var chapterLine = input.uicolor + "| " + input.color + chapter.title + " ";
-    var offset = 10;
+    var offset = 9;
     if (chapter.pages[chapter.pages.length - 1].number >= 100) {
-        offset = 11;
+        offset = 10;
     }
     for (let j = ColorStringLength(chapterLine, input); j <= input.columns - offset; j++) {
         chapterLine += ".";
