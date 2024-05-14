@@ -411,11 +411,11 @@ function GeneratePageHeader(page, input) {
     
     pageHeaderRight += page.number;
 
-    for (let i = 0; i < input.columns - (pageHeaderLeft.length + pageHeaderRight.length); i++) {
+    for (let i = 0; i < input.columns - (ColorStringLength(pageHeaderLeft) + pageHeaderRight.length); i++) {
         pageHeaderSpace += " ";
     }
     
-    return input.uicolor + pageHeaderLeft + pageHeaderSpace + pageHeaderRight + "\n" + input.color + "\n";
+    return input.uicolor + pageHeaderLeft + pageHeaderSpace + input.uicolor + pageHeaderRight + "\n" + input.color + "\n";
 }
 
 function GeneratePageFooter(chapters, page, input) {
